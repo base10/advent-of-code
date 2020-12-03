@@ -9,19 +9,8 @@ values = File.readlines(INPUT)
 values.map!(&:chomp)
 values.map!(&:to_i)
 
-binding.pry
-
-values.each do |value|
-  test_value_1 = TARGET - value
-  test_array_1 = values.select { |entry| entry < test_value_1 }
-
-  test_array_1.each do |value_2|
-    test_value_2 = test_value_1 - value_2
-
-    next unless test_array_1.include?(test_value_2)
-    next unless (value + test_value_1 + test_value_2) == TARGET
-
-
-    puts value * test_value_1 * test_value_2
-  end
-end
+permutations = values.permutation(3).to_a
+permutations.uniq! { |p| p.sum }
+permutations.select! { |p| p.sum == TARGET }
+permutations.flatten!
+puts permutations.inject(&:*)
