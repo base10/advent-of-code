@@ -1,50 +1,11 @@
 #!/usr/bin/env ruby
 
 require 'pry-byebug'
+Dir["./lib/*.rb"].each { |file| require file }
 
 # FIXME: ARGV this
-INPUT = File.expand_path('day3-input.txt', __dir__)
+INPUT = File.expand_path('./inputs/day3-input.txt', __dir__)
 
-class Counter
-  attr_accessor :open_count, :tree_count
-
-  def initialize
-    @open_count = 0
-    @tree_count = 0
-  end
-
-  def classify(character)
-    @open_count += 1 if character == '.'
-    @tree_count += 1 if character == '#'
-  end
-end
-
-# I need the first iteration to be line 1, Pos 3
-class Iterator
-  attr_accessor :iteration, :position, :steps
-
-  def initialize(position:, steps: 3)
-    @iteration = 0
-    @position = position
-    @steps = steps
-  end
-
-  def next_position
-    @iteration += 1
-
-    position.y = @iteration
-    position.x = @iteration * steps
-  end
-end
-
-class Position
-  attr_accessor :x, :y
-
-  def initialize(x: 0, y: 0)
-    @x = x
-    @y = y
-  end
-end
 
 # Read the file
 lines = File.readlines(INPUT)
