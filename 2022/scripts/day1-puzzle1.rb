@@ -19,7 +19,8 @@ parser = CalorieParser.new(input_file: input_file)
 parser.run
 
 parser.results.each do |result|
+  count = parser.results.index(result) + 1
   elf = Elf.new(calories: result)
 
-  puts elf.total
+  puts "#{count}: #{elf.total}"
 end
