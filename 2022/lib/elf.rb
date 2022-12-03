@@ -5,6 +5,8 @@ class Elf
     @calories = calories
   end
 
+  # TODO: Items: count of entries in calories
+
   def total
     converted_calories = calories.map(&:to_i)
 
