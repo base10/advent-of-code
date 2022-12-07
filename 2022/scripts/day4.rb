@@ -48,10 +48,26 @@ class Day4
   end
 
   def puzzle2
+    data = []
+    file_lines.each do |line|
+      tuple_a, tuple_b = line.split(",")
+
+      range_a = tuple_to_range(tuple: tuple_a)
+      range_b = tuple_to_range(tuple: tuple_b)
+
+      array_a = range_a.to_a
+      array_b = range_b.to_a
+
+      next unless array_a.intersection(array_b).any?
+
+      data << [array_a, array_b]
+    end
+
+    @puzzle2_result = { count: data.count }
   end
 
   def puzzle2_report
-    "Puzzle 2: Nothing yet"
+    "Puzzle 2: Ranges with overlap: #{puzzle2_result[:count]}"
   end
 
   def tuple_to_range(tuple:)
