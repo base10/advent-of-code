@@ -16,7 +16,7 @@ class Day6
   end
 
   def report
-    [puzzle1_report, puzzle2_report].join("\n")
+    "#{marker_position}"
   end
 
   private
@@ -25,22 +25,12 @@ class Day6
     @file_lines = File.readlines(input_file, chomp: true)
   end
 
-  def puzzle1_report
-    "Puzzle1: #{marker_position}"
-  end
-
-  def puzzle2_report
-    "Puzzle2: …"
-  end
-
   def find_marker
     offset = 0
     found = false
 
     message = file_lines.first
     max_test = message.size - (marker_length - 1)
-
-    #binding.pry
 
     while !found && (offset < max_test) do
       @marker_position = offset + marker_length
@@ -62,7 +52,12 @@ input_file = File.path(
   )
 )
 
-day6 = Day6.new(input_file: input_file, marker_length: 4)
-day6.run
+puzzle1 = Day6.new(input_file: input_file, marker_length: 4)
+puzzle1.run
 
-puts day6.report
+puts "Puzzle 1: #{puzzle1.report}"
+
+puzzle2 = Day6.new(input_file: input_file, marker_length: 14)
+puzzle2.run
+
+puts "Puzzle 2: #{puzzle2.report}"
