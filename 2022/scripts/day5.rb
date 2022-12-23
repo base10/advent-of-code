@@ -9,11 +9,13 @@ class Day5
     :movement_lines,
     :puzzle1_result,
     :puzzle2_result,
-    :stack_lines
+    :stack_lines,
+    :stack_state
   )
 
   def initialize(input_file:)
     @input_file = input_file
+    @stack_state = {}
   end
 
   def run
@@ -37,10 +39,13 @@ class Day5
 
     segment_lines
     build_initial_stack_state
+    process_move_instructions
   end
 
   def puzzle1_report
-    "Puzzle 1: …"
+    result = stack_state.values.map(&:first)
+
+    "Puzzle 1: #{result.join}"
   end
 
   def puzzle2
@@ -64,6 +69,7 @@ class Day5
     @movement_lines = file_lines[(separator + 1), file_lines.size]
   end
 
+  # TODO: refactor
   def build_initial_stack_state
     # Determine num of stacks and their positions in the line
     # start from end of stack lines
@@ -83,14 +89,7 @@ class Day5
       stack_position_index += 1
     end
 
-    # For each position, add an entry to the
-    # apporpriate stack
-
     stack_positions = stack_position_map.keys
-
-    # Based on number of stacks, build out the column thing
-
-    stack_state = {}
 
     stack_position_map.values.each do |i|
       stack_state[i] = []
@@ -103,6 +102,25 @@ class Day5
 
         stack_state[stack_position_map[position]] << line_chars[position]
       end
+    end
+  end
+
+  def process_move_instructions
+    movement_lines.each do |line|
+      matcher = /^move (\d+) from (\d+) to (\d+)/
+      matches = line.match(matcher)
+
+      count = matches[1].to_i
+      source = matches[2].to_i
+      destination = matches[3].to_i
+
+      act_on_stack(count: count, destination: destination, source: source)
+    end
+  end
+
+  def act_on_stack(count:, destination:, source:)
+    count.times do
+      stack_state[destination].unshift stack_state[source].shift
     end
   end
 end
