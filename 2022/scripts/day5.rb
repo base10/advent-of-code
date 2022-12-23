@@ -35,35 +35,35 @@ class Day5
   end
 
   def puzzle1
-    data = []
-
     segment_lines
     build_initial_stack_state
-    process_move_instructions
+    process_move_instructions(:puzzle1)
+
+    @puzzle1_result = stack_state.values.map(&:first)
   end
 
   def puzzle1_report
-    result = stack_state.values.map(&:first)
-
-    "Puzzle 1: #{result.join}"
+    "Puzzle 1: #{puzzle1_result.join}"
   end
 
   def puzzle2
-    data = []
-    file_lines.each do |line|
-    end
+    @stack_state = {}
 
-    @puzzle2_result = { count: data.count }
+    segment_lines
+    build_initial_stack_state
+    process_move_instructions(:puzzle2)
+
+    @puzzle2_result = stack_state.values.map(&:first)
   end
 
   def puzzle2_report
-    "Puzzle 2: …"
+    "Puzzle 2: #{puzzle2_result.join}"
   end
 
   def segment_lines
     separator = file_lines.index("")
 
-    puts "Seperator line: #{separator}"
+    #puts "Seperator line: #{separator}"
 
     @stack_lines = file_lines[0, separator]
     @movement_lines = file_lines[(separator + 1), file_lines.size]
@@ -105,7 +105,7 @@ class Day5
     end
   end
 
-  def process_move_instructions
+  def process_move_instructions(puzzle)
     movement_lines.each do |line|
       matcher = /^move (\d+) from (\d+) to (\d+)/
       matches = line.match(matcher)
@@ -114,13 +114,23 @@ class Day5
       source = matches[2].to_i
       destination = matches[3].to_i
 
-      act_on_stack(count: count, destination: destination, source: source)
+      act_on_stack(
+        count: count,
+        destination: destination,
+        puzzle: puzzle,
+        source: source
+      )
     end
   end
 
-  def act_on_stack(count:, destination:, source:)
-    count.times do
-      stack_state[destination].unshift stack_state[source].shift
+  def act_on_stack(count:, destination:, puzzle:, source:)
+    if puzzle == :puzzle1
+      count.times do
+        stack_state[destination].unshift stack_state[source].shift
+      end
+    else
+      stack_state[destination].unshift stack_state[source].shift(count)
+      stack_state[destination].flatten!
     end
   end
 end
@@ -133,7 +143,6 @@ input_file = File.path(
 )
 
 day5 = Day5.new(input_file: input_file)
-
 day5.run
 
 puts day5.report
